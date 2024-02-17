@@ -28,18 +28,26 @@ export default function Form({
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
   // handle on submit
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+
     // `!` expression => force not to be null (require)
     onSubmit({
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
-      tags: [],
+      tags: selectedTags,
     });
+    titleRef.current!.value = "";
+    markdownRef.current!.value = "";
   };
   return (
-    <FormGroup onSubmit={handleSubmit}>
+    <FormGroup
+      onSubmit={(e) => {
+        handleSubmit(e);
+      }}
+    >
       <Stack gap={4}>
         <Row>
           <Col>
@@ -82,7 +90,13 @@ export default function Form({
           <FormControl required as="textarea" rows={15} ref={markdownRef} />
         </FormGroup>
         <Stack direction="horizontal" gap={2} className="justify-content-end">
-          <Button type="submit" variant="primary">
+          <Button
+            type="submit"
+            variant="primary"
+            onClick={(e) => {
+              handleSubmit(e);
+            }}
+          >
             Save
           </Button>
           <Link to="..">

@@ -6,31 +6,25 @@ export default function useLocalStorage<T>(
 ) {
   const [value, setValue] = useState(() => {
     const jsonValue = localStorage.getItem(key);
-    // console.log(jsonValue, typeof jsonValue, Boolean(jsonValue));
+    console.log("inja");
 
     if (jsonValue == null) {
       if (typeof initialValue === "function") {
         return (initialValue as () => T)();
       } else {
-        // console.log("inn", initialValue);
         return initialValue;
       }
-    } else if (jsonValue !== undefined) {
+    } else if (jsonValue === "undefined") {
       return initialValue;
     } else {
-      // console.log("parse", jsonValue == "undefined", initialValue);
       return JSON.parse(jsonValue);
     }
   });
-  // else if (jsonValue == "undefined") {
-  //   console.log("inja", jsonValue == "undefined", initialValue);
-  //   return initialValue;
-  // }
-  console.log(value, "val");
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [value, key]);
+  console.log("value", value, key);
 
   return [value, setValue] as [T, typeof setValue];
 }
