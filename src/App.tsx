@@ -6,6 +6,7 @@ import NewNote from "./NewNote";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidV4 } from "uuid";
+import NoteList from "./NoteList";
 
 export type Note = {
   id: string;
@@ -33,7 +34,7 @@ function App() {
   const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
   // we have note with own tags
-  useMemo(() => {
+  const notesWithTags = useMemo(() => {
     return notes?.map((note) => {
       return {
         ...note,
@@ -60,7 +61,10 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<h1>Home</h1>} />
+        <Route
+          path="/"
+          element={<NoteList availabelTags={tags} notes={notesWithTags} />}
+        />
         <Route
           path="/new"
           element={
