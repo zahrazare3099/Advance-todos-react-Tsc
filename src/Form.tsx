@@ -17,17 +17,20 @@ type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
   availabelTags: Tag[];
-};
+} & Partial<NoteData>;
 
 export default function Form({
   onSubmit,
   onAddTag,
   availabelTags,
+  title = "",
+  markdown = "",
+  tags = [],
 }: NoteFormProps) {
   // declare initial state of inputs
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 
   //create navigate
   const navigate = useNavigate();
@@ -42,8 +45,6 @@ export default function Form({
       tags: selectedTags,
     });
     navigate("..");
-    titleRef.current!.value = "";
-    markdownRef.current!.value = "";
   };
   return (
     <FormGroup
@@ -56,7 +57,7 @@ export default function Form({
           <Col>
             <FormGroup controlId="title">
               <FormLabel>Title</FormLabel>
-              <FormControl required ref={titleRef} />
+              <FormControl required ref={titleRef} defaultValue={title} />
             </FormGroup>
           </Col>
           <Col>
@@ -90,7 +91,13 @@ export default function Form({
         </Row>
         <FormGroup controlId="markdowm">
           <FormLabel>descreption</FormLabel>
-          <FormControl required as="textarea" rows={15} ref={markdownRef} />
+          <FormControl
+            required
+            as="textarea"
+            rows={15}
+            ref={markdownRef}
+            defaultValue={markdown}
+          />
         </FormGroup>
         <Stack direction="horizontal" gap={2} className="justify-content-end">
           <Button
